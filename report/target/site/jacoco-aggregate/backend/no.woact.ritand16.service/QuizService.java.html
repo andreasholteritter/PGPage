@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>QuizService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">report</a> &gt; <a href="../index.html" class="el_bundle">backend</a> &gt; <a href="index.source.html" class="el_package">no.woact.ritand16.service</a> &gt; <span class="el_source">QuizService.java</span></div><h1>QuizService.java</h1><pre class="source lang-java linenums">package no.woact.ritand16.service;
+
+import no.woact.ritand16.entity.Quiz;
+import no.woact.ritand16.entity.SubCategory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.*;
+
+//Created 09/04/2018 by Ritter
+//https://github.com/arcuri82/testing_security_development_enterprise_systems/blob/master/intro/exercises/quiz-game/part-08/src/main/java/org/tsdes/intro/exercises/quizgame/service/QuizService.java
+
+@Service
+@Transactional
+<span class="nc" id="L18">public class QuizService {</span>
+
+    @Autowired
+    private EntityManager em;
+
+    public List&lt;Quiz&gt; getRandomQuizzes(int n, long categoryId){
+
+<span class="nc" id="L25">        TypedQuery&lt;Long&gt; sizeQuery= em.createQuery(</span>
+                &quot;select count(q) from Quiz q where q.subCategory.parent.id=?1&quot;, Long.class);
+<span class="nc" id="L27">        sizeQuery.setParameter(1, categoryId);</span>
+<span class="nc" id="L28">        long size = sizeQuery.getSingleResult();</span>
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if(n &gt; size){</span>
+<span class="nc" id="L31">            throw new IllegalArgumentException(&quot;Cannot choose &quot; + n + &quot; unique quizzes out of the &quot; + size + &quot; existing&quot;);</span>
+        }
+
+<span class="nc" id="L34">        Random random = new Random();</span>
+
+<span class="nc" id="L36">        List&lt;Quiz&gt; quizzes = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L37">        Set&lt;Integer&gt; chosen = new HashSet&lt;&gt;();</span>
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        while(chosen.size() &lt; n) {</span>
+
+<span class="nc" id="L41">            int k = random.nextInt((int)size);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            if(chosen.contains(k)){</span>
+<span class="nc" id="L43">                continue;</span>
+            }
+<span class="nc" id="L45">            chosen.add(k);</span>
+
+<span class="nc" id="L47">            TypedQuery&lt;Quiz&gt; query = em.createQuery(</span>
+                    &quot;select q from Quiz q where q.subCategory.parent.id=?1&quot;, Quiz.class);
+<span class="nc" id="L49">            query.setParameter(1, categoryId);</span>
+<span class="nc" id="L50">            query.setMaxResults(1);</span>
+<span class="nc" id="L51">            query.setFirstResult(k);</span>
+
+<span class="nc" id="L53">            quizzes.add(query.getSingleResult());</span>
+<span class="nc" id="L54">        }</span>
+<span class="nc" id="L55">        return  quizzes;</span>
+    }
+
+    public long createQuiz(
+            long subCategoryId,
+            String question,
+            String firstAnswer,
+            String secondAnswer,
+            String thirdAnswer,
+            String fourthAnswer,
+            int indexOfCorrectAnswer
+    ){
+
+<span class="nc" id="L68">        SubCategory subCategory = em.find(SubCategory.class, subCategoryId);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if(subCategory == null){</span>
+<span class="nc" id="L70">            throw new IllegalArgumentException(&quot;SubCategory &quot;+subCategoryId+&quot; does not exist&quot;);</span>
+        }
+
+<span class="nc" id="L73">        Quiz quiz = new Quiz();</span>
+<span class="nc" id="L74">        quiz.setSubCategory(subCategory);</span>
+<span class="nc" id="L75">        quiz.setQuestion(question);</span>
+<span class="nc" id="L76">        quiz.setFirstAnswer(firstAnswer);</span>
+<span class="nc" id="L77">        quiz.setSecondAnswer(secondAnswer);</span>
+<span class="nc" id="L78">        quiz.setThirdAnswer(thirdAnswer);</span>
+<span class="nc" id="L79">        quiz.setFourthAnswer(fourthAnswer);</span>
+<span class="nc" id="L80">        quiz.setIndexOfCorrectAnswer(indexOfCorrectAnswer);</span>
+
+<span class="nc" id="L82">        em.persist(quiz);</span>
+
+<span class="nc" id="L84">        return quiz.getId();</span>
+    }
+
+    public List&lt;Quiz&gt; getQuizzes(){
+<span class="nc" id="L88">        TypedQuery&lt;Quiz&gt; query = em.createQuery(&quot;select q from Quiz q&quot;, Quiz.class);</span>
+<span class="nc" id="L89">        return query.getResultList();</span>
+    }
+
+    public Quiz getQuiz(long id){
+<span class="nc" id="L93">        return em.find(Quiz.class, id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

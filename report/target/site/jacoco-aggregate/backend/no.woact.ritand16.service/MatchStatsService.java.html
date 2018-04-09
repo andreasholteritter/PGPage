@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>MatchStatsService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">report</a> &gt; <a href="../index.html" class="el_bundle">backend</a> &gt; <a href="index.source.html" class="el_package">no.woact.ritand16.service</a> &gt; <span class="el_source">MatchStatsService.java</span></div><h1>MatchStatsService.java</h1><pre class="source lang-java linenums">package no.woact.ritand16.service;
+
+import no.woact.ritand16.entity.MatchStats;
+import no.woact.ritand16.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
+
+//Created 09/04/2018 by Ritter
+//https://github.com/arcuri82/testing_security_development_enterprise_systems/blob/master/intro/exercises/quiz-game/part-10/src/main/java/org/tsdes/intro/exercises/quizgame/service/MatchStatsService.java
+
+@Service
+@Transactional
+<span class="nc" id="L18">public class MatchStatsService {</span>
+
+    @Autowired
+    private EntityManager em;
+
+    public void reportVictory(String username){
+
+<span class="nc" id="L25">        MatchStats match = getMatchStats(username);</span>
+
+<span class="nc" id="L27">        match.setVictories( 1 + match.getVictories());</span>
+<span class="nc" id="L28">    }</span>
+
+    public void reportDefeat(String username){
+
+<span class="nc" id="L32">        MatchStats match = getMatchStats(username);</span>
+
+<span class="nc" id="L34">        match.setDefeats( 1 + match.getDefeats());</span>
+<span class="nc" id="L35">    }</span>
+
+
+    public MatchStats getMatchStats(String username) {
+
+<span class="nc" id="L40">        TypedQuery&lt;MatchStats&gt; query = em.createQuery(</span>
+                &quot;select m from MatchStats m where m.user.username=?1&quot;, MatchStats.class);
+<span class="nc" id="L42">        query.setParameter(1, username);</span>
+
+<span class="nc" id="L44">        List&lt;MatchStats&gt; results = query.getResultList();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if(!results.isEmpty()){</span>
+<span class="nc" id="L46">            return results.get(0);</span>
+        }
+
+<span class="nc" id="L49">        User user = em.find(User.class, username);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(user == null){</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;No existing user: &quot; + username);</span>
+        }
+
+<span class="nc" id="L54">        MatchStats match = new MatchStats();</span>
+<span class="nc" id="L55">        match.setUser(user);</span>
+<span class="nc" id="L56">        em.persist(match);</span>
+
+<span class="nc" id="L58">        return match;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DefaultDataInitializerService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">report</a> &gt; <a href="../index.html" class="el_bundle">backend</a> &gt; <a href="index.source.html" class="el_package">no.woact.ritand16.service</a> &gt; <span class="el_source">DefaultDataInitializerService.java</span></div><h1>DefaultDataInitializerService.java</h1><pre class="source lang-java linenums">package no.woact.ritand16.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.function.Supplier;
+
+//Created 09/04/2018 by Ritter
+//https://github.com/arcuri82/testing_security_development_enterprise_systems/blob/master/intro/exercises/quiz-game/part-10/src/main/java/org/tsdes/intro/exercises/quizgame/service/DefaultDataInitializerService.java
+
+@Service
+<span class="nc" id="L13">public class DefaultDataInitializerService {</span>
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private QuizService quizService;
+
+    @PostConstruct
+    public void initialize(){
+
+<span class="nc" id="L27">        attempt(() -&gt; userService.createUser(&quot;foo&quot;, &quot;123&quot;));</span>
+
+<span class="nc" id="L29">        Long ctgSE = attempt(() -&gt; categoryService.createCategory(&quot;Software Engineering&quot;));</span>
+<span class="nc" id="L30">        Long ctgH = attempt(() -&gt; categoryService.createCategory(&quot;History&quot;));</span>
+
+<span class="nc" id="L32">        Long sEP = attempt(() -&gt; categoryService.createSubCategory(ctgSE, &quot;Enterprise Programming&quot;));</span>
+<span class="nc" id="L33">        Long sIS = attempt(() -&gt; categoryService.createSubCategory(ctgSE, &quot;Information Security&quot;));</span>
+<span class="nc" id="L34">        Long sJ = attempt(() -&gt; categoryService.createSubCategory(ctgSE, &quot;Java&quot;));</span>
+<span class="nc" id="L35">        Long sA = attempt(() -&gt; categoryService.createSubCategory(ctgSE, &quot;Algorithms and Data Structure&quot;));</span>
+
+<span class="nc" id="L37">        Long sRE = attempt(() -&gt; categoryService.createSubCategory(ctgH, &quot;Roman Empire&quot;));</span>
+
+<span class="nc" id="L39">        createEnterpriseQuestions(sEP);</span>
+<span class="nc" id="L40">        createJavaQuestions(sJ);</span>
+<span class="nc" id="L41">        createSecurityQuestions(sIS);</span>
+<span class="nc" id="L42">        createAlgorithmQuestions(sA);</span>
+<span class="nc" id="L43">        createRomeEmpireQuestions(sRE);</span>
+<span class="nc" id="L44">    }</span>
+
+    private void createEnterpriseQuestions(Long sub) {
+
+<span class="nc" id="L48">        createQuiz(</span>
+                sub,
+                &quot;What does JPA stands for?&quot;,
+                &quot;Java Pale Ale&quot;,
+                &quot;Java Persistence API&quot;,
+                &quot;Java Process Analyzer&quot;,
+                &quot;Java Persistence Analyzer&quot;,
+                1);
+
+<span class="nc" id="L57">        createQuiz(</span>
+                sub,
+                &quot;What does JEE stands for?&quot;,
+                &quot;Java Embedded Edition&quot;,
+                &quot;Java Extended Edition&quot;,
+                &quot;Java Enterprise Edition&quot;,
+                &quot;Java Excelsior Edition&quot;,
+                2);
+<span class="nc" id="L65">        createQuiz(</span>
+                sub,
+                &quot;Which of these is a JPA implementation?&quot;,
+                &quot;Hibernate&quot;,
+                &quot;Wildfly&quot;,
+                &quot;Glassfish&quot;,
+                &quot;Jackson&quot;,
+                0);
+<span class="nc" id="L73">    }</span>
+
+    private void createJavaQuestions(Long sub){
+
+<span class="nc" id="L77">        createQuiz(</span>
+                sub,
+                &quot;What is a 'volatile' variable?&quot;,
+                &quot;Java does not have volatile variables&quot;,
+                &quot;A variable whose value cannot be changed&quot;,
+                &quot;A variable whose value might change every time it is read&quot;,
+                &quot;A variable whose value is never cached&quot;,
+                3);
+<span class="nc" id="L85">        createQuiz(</span>
+                sub,
+                &quot;What is a 'final' variable?&quot;,
+                &quot;A variable that can be used only when the JVM is shutting down&quot;,
+                &quot;A variable whose value cannot be changed once initialized&quot;,
+                &quot;A variable whose value might change every time it is read&quot;,
+                &quot;Java does not have final variables&quot;,
+                1);
+<span class="nc" id="L93">    }</span>
+
+    private void createSecurityQuestions(Long sub) {
+<span class="nc" id="L96">        createQuiz(</span>
+                sub,
+                &quot;Why should hashed passwords be 'salted'?&quot;,
+                &quot;You cannot 'salt' a password&quot;,
+                &quot;It makes the passwords easier to remember&quot;,
+                &quot;Help to defend from dictionary attacks&quot;,
+                &quot;They taste better&quot;,
+                2);
+
+<span class="nc" id="L105">        createQuiz(</span>
+                sub,
+                &quot;Which grade will you get if you submit a project that is vulnerable to SQL Injection attacks?&quot;,
+                &quot;One grade less (e.g., a B turns into a C)&quot;,
+                &quot;Two grades less (e.g., a B turns into a D)&quot;,
+                &quot;An A, because so your lecturer can have fun hacking your web site&quot;,
+                &quot;A straight F, regardless of what done in the rest of the project&quot;,
+                3);
+
+<span class="nc" id="L114">    }</span>
+
+    private void createAlgorithmQuestions(Long sub) {
+<span class="nc" id="L117">        createQuiz(</span>
+                sub,
+                &quot;What best describe the runtime complexity of binary search?&quot;,
+                &quot;5n&quot;,
+                &quot;O(n)&quot;,
+                &quot;O(log n)&quot;,
+                &quot;O(n log n)&quot;,
+                2);
+
+<span class="nc" id="L126">        createQuiz(</span>
+                sub,
+                &quot;What can you say about sorting algorithms?&quot;,
+                &quot;Merge Sort is strictly better than Quick Sort&quot;,
+                &quot;Quick Sort is strictly better than Merge Sort&quot;,
+                &quot;Bubble Sort is better than Merge/Quick Sort, as it uses less space&quot;,
+                &quot;Merge Sort is asymptotically optimal in the number of comparisons&quot;,
+                3);
+
+<span class="nc" id="L135">    }</span>
+
+    private void createRomeEmpireQuestions(Long sub) {
+<span class="nc" id="L138">        createQuiz(</span>
+                sub,
+                &quot;Who was the first Roman Emperor?&quot;,
+                &quot;Caligula&quot;,
+                &quot;Tiberius&quot;,
+                &quot;Augustus&quot;,
+                &quot;Caesar&quot;,
+                2);
+
+<span class="nc" id="L147">        createQuiz(</span>
+                sub,
+                &quot;After which god is the month 'Mars' named?&quot;,
+                &quot;God of Thunders&quot;,
+                &quot;God of Love&quot;,
+                &quot;God of Wars&quot;,
+                &quot;God of Pestilence&quot;,
+                2);
+
+<span class="nc" id="L156">        createQuiz(</span>
+                sub,
+                &quot;According to the legend, who founded Rome ?&quot;,
+                &quot;Romulus and Remus&quot;,
+                &quot;Augustus and Caesar&quot;,
+                &quot;Tiberius and Claudius&quot;,
+                &quot;Erik and Olav&quot;,
+                0);
+
+<span class="nc" id="L165">        createQuiz(</span>
+                sub,
+                &quot;Which was the largest empire in history?&quot;,
+                &quot;Mongol Empire&quot;,
+                &quot;Russian Empire&quot;,
+                &quot;English Empire&quot;,
+                &quot;Roman Empire&quot;,
+                2);
+
+<span class="nc" id="L174">        createQuiz(</span>
+                sub,
+                &quot;Who were the Praetorians?&quot;,
+                &quot;Priests of the God Pratunus&quot;,
+                &quot;Slaves&quot;,
+                &quot;Barbarians&quot;,
+                &quot;Elite soldiers&quot;,
+                3);
+<span class="nc" id="L182">    }</span>
+
+
+
+    private void createQuiz(
+            Long subCategoryId,
+            String question,
+            String firstAnswer,
+            String secondAnswer,
+            String thirdAnswer,
+            String fourthAnswer,
+            int indexOfCorrectAnswer){
+<span class="nc" id="L194">        attempt(() -&gt; quizService.createQuiz(</span>
+<span class="nc" id="L195">                subCategoryId,</span>
+                question,
+                firstAnswer,
+                secondAnswer,
+                thirdAnswer,
+                fourthAnswer,
+                indexOfCorrectAnswer));
+<span class="nc" id="L202">    }</span>
+
+    private  &lt;T&gt; T attempt(Supplier&lt;T&gt; lambda){
+        try{
+<span class="nc" id="L206">            return lambda.get();</span>
+<span class="nc" id="L207">        }catch (Exception e){</span>
+<span class="nc" id="L208">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

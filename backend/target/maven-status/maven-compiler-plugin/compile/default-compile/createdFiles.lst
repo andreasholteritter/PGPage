@@ -1,0 +1,11 @@
+no\woact\ritand16\entity\Category.class
+no\woact\ritand16\entity\MatchStats.class
+no\woact\ritand16\service\MatchStatsService.class
+no\woact\ritand16\service\QuizService.class
+no\woact\ritand16\entity\User.class
+no\woact\ritand16\service\UserService.class
+no\woact\ritand16\service\CategoryService.class
+no\woact\ritand16\entity\Quiz.class
+no\woact\ritand16\service\DefaultDataInitializerService.class
+no\woact\ritand16\entity\SubCategory.class
+no\woact\ritand16\PasswordConfig.class

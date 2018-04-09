@@ -1,0 +1,12 @@
+no\woact\ritand16\selenium\SeleniumTestBase.class
+no\woact\ritand16\LocalApplicationRunner.class
+no\woact\ritand16\selenium\po\SignUpPO.class
+no\woact\ritand16\selenium\SeleniumDockerIT$DockerInitializer.class
+no\woact\ritand16\selenium\SeleniumDockerIT.class
+no\woact\ritand16\selenium\po\LayoutPO.class
+no\woact\ritand16\selenium\SeleniumLocalIT.class
+no\woact\ritand16\selenium\SeleniumDriverHandler.class
+no\woact\ritand16\selenium\po\ui\MatchPO.class
+no\woact\ritand16\selenium\PageObject.class
+no\woact\ritand16\selenium\po\ui\ResultPO.class
+no\woact\ritand16\selenium\po\IndexPO.class
